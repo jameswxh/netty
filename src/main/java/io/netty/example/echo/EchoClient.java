@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package james.learn.netty.echo;
+package io.netty.example.echo;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -24,8 +24,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -38,21 +36,20 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
  */
 public final class EchoClient {
 
-    //static final boolean SSL = System.getProperty("ssl") != null;
-    static final boolean SSL = false;
+    static final boolean SSL = System.getProperty("ssl") != null;
     static final String HOST = System.getProperty("host", "127.0.0.1");
     static final int PORT = Integer.parseInt(System.getProperty("port", "8007"));
-    static final int SIZE = Integer.parseInt(System.getProperty("size", "10"));
+    static final int SIZE = Integer.parseInt(System.getProperty("size", "256"));
 
     public static void main(String[] args) throws Exception {
         // Configure SSL.git
-//        final SslContext sslCtx;
-//        if (SSL) {
-//            sslCtx = SslContextBuilder.forClient()
-//                .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-//        } else {
-//            sslCtx = null;
-//        }
+        final SslContext sslCtx;
+        if (SSL) {
+            sslCtx = SslContextBuilder.forClient()
+                .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        } else {
+            sslCtx = null;
+        }
 
         // Configure the client.
         EventLoopGroup group = new NioEventLoopGroup();
@@ -65,10 +62,10 @@ public final class EchoClient {
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
                      ChannelPipeline p = ch.pipeline();
-                    // if (sslCtx != null) {
-                    //     p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
-                    // }
-                    // p.addLast(new LoggingHandler(LogLevel.INFO));
+                     if (sslCtx != null) {
+                         p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
+                     }
+                     //p.addLast(new LoggingHandler(LogLevel.INFO));
                      p.addLast(new EchoClientHandler());
                  }
              });

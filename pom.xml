@@ -34,6 +34,12 @@
             <artifactId>jboss-marshalling-serial</artifactId>
             <version>1.4.11.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>4.3.6.RELEASE</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -54,7 +60,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.hzmsc.scada.Jmtis.server.JmtisServer</mainClass>
+                            <mainClass>com.hzmsc.scada.JmtisLE.server.JmtisServer</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
                     </archive>
